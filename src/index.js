@@ -2,7 +2,8 @@ const axios = require('axios')
 const Input = require('prompt-input')
 const lodash = require('lodash')
 const fs = require('fs-extra')
-const {get, reduce} = lodash
+const {get, reduce, forEach} = lodash
+const addZero = require('add-zero')
 
 const http = axios.create()
 
@@ -30,21 +31,38 @@ async function createReadme (slug, title, image, description, instructor, path) 
 }
 
 async function createSummary (slug, lessons) {
-  debugger;
-
   const bullets = reduce(lessons, (prev, lesson) => {
-    debugger;
     return `${prev}* [${lesson.title}](./lessons/${lesson.slug})\n`
   }, '')
 
   const summary = `# Summary\n\n${bullets}`
 
+  const file = `output/${slug}/SUMMARY.md`  
   try {
-    await fs.outputFile(`output/${slug}/SUMMARY.md`, summary)
+    await fs.outputFile(file, summary)
   } catch (err) {
-    console.error('Error creating Summary!')
+    console.error('Error creating Summary!', err)
   }
 } 
+
+async function writeFileToDir (file, content) {
+  try {
+    await fs.outputFile(file, content)
+  } catch (err) {
+    console.error('Error writing Lesson file!', err)
+  }
+}
+
+async function createLessonDocs (slug, lessons) {
+  const dir = `output/${slug}/lessons` 
+  
+  forEach(lessons, (lesson, i) => {
+    const file = `${dir}/${addZero(i + 1)}_${lesson.slug}.md`
+    const summary = `# Original Transcript\n\n${lesson.transcript}\n`
+
+    writeFileToDir(file, summary)
+  })
+}
 
 const makeRequest = (slug) => {
   const reqUrl = `https://egghead.io/api/v1/series/${slug}?load_lessons=true`
@@ -57,6 +75,7 @@ const makeRequest = (slug) => {
       createDirectory(slug)
       createReadme(slug, title, square_cover_url, description, instructor, path)
       createSummary(slug, lessons)
+      createLessonDocs(slug, lessons)
 
     })
     .catch(error => {
