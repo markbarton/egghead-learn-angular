@@ -32,7 +32,7 @@ async function createReadme (slug, title, image, description, instructor, path) 
 
 async function createSummary (slug, lessons) {
   const bullets = reduce(lessons, (prev, lesson) => {
-    return `${prev}* [${lesson.title}](./lessons/${lesson.slug})\n`
+    return `${prev}* [${lesson.title}](./lessons/${lesson.slug}.md)\n`
   }, '')
 
   const summary = `# Summary\n\n${bullets}`
