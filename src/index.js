@@ -19,8 +19,8 @@ async function createDirectory (dir) {
 }
 
 async function createReadme (slug, title, image, description, instructor, path) {
-  const readme = `# ${title}\n\n![Course Image](${image})\n\nAsciicasts for [${instructor.full_name}](${instructor.instructor_url})'s course, ${title} on [egghead.io](https://egghead.io/${path})\n\n## Description\n${description}\n\n## Library Version\n`
-  
+  const readme = `# ${title}\n\n![Course Image](${image})\n\nAsciicasts for [${instructor.full_name}](${instructor.http_url})'s course, ${title} on [egghead.io](https://egghead.io/${path})\n\n## Description\n${description}\n\n## Library Version\n`
+
   const file = `output/${slug}/README.md`
 
   try {
@@ -37,13 +37,13 @@ async function createSummary (slug, lessons) {
 
   const summary = `# Summary\n\n${bullets}`
 
-  const file = `output/${slug}/SUMMARY.md`  
+  const file = `output/${slug}/SUMMARY.md`
   try {
     await fs.outputFile(file, summary)
   } catch (err) {
     console.error('Error creating Summary!', err)
   }
-} 
+}
 
 async function writeFileToDir (file, content) {
   try {
@@ -54,8 +54,8 @@ async function writeFileToDir (file, content) {
 }
 
 async function createLessonDocs (slug, lessons) {
-  const dir = `output/${slug}/lessons` 
-  
+  const dir = `output/${slug}/lessons`
+
   forEach(lessons, (lesson, i) => {
     const file = `${dir}/${addZero(i + 1)}_${lesson.slug}.md`
     const summary = `# Original Transcript\n\n${lesson.transcript}\n`
@@ -66,12 +66,12 @@ async function createLessonDocs (slug, lessons) {
 
 const makeRequest = (slug) => {
   const reqUrl = `https://egghead.io/api/v1/series/${slug}?load_lessons=true`
-  
+
   http.get(reqUrl)
     .then(({data}) => {
       const {slug, title, author, description, square_cover_url, instructor, path, lessons} = data
       console.log(`Course Found! ${get(data, 'title')}`)
-      
+
       createDirectory(slug)
       createReadme(slug, title, square_cover_url, description, instructor, path)
       createSummary(slug, lessons)
