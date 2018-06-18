@@ -19,7 +19,7 @@ async function createDirectory (dir) {
 }
 
 async function createReadme (slug, title, image, description, instructor, path) {
-  const readme = `# ${title}\n\n![Course Image](${image})\n\nAsciicasts for [${instructor.full_name}](${<instructor className="http_url"></instructor>})'s course, ${title} on [egghead.io](https://egghead.io/${path})\n\n## Description\n${description}\n\n## Library Version\n`
+  const readme = `# ${title}\n\n![Course Image](${image})\n\nAsciicasts for [${instructor.full_name}](${instructor.http_url})'s course, ${title} on [egghead.io](https://egghead.io/${path})\n\n## Description\n${description}\n\n## Library Version\n`
 
   const file = `output/${slug}/README.md`
 
