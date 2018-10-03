@@ -1,3 +1,4 @@
+require('dotenv').config()
 const axios = require('axios')
 const Input = require('prompt-input')
 const lodash = require('lodash')
@@ -5,6 +6,7 @@ const fs = require('fs-extra')
 const {get, reduce, forEach} = lodash
 const addZero = require('add-zero')
 
+axios.defaults.headers.common['Authorization'] = `Bearer ${process.env.EGGHEAD_AUTH_TOKEN}`;
 const http = axios.create()
 
 async function createDirectory (dir) {
@@ -58,7 +60,7 @@ async function createLessonDocs (slug, lessons) {
 
   forEach(lessons, (lesson, i) => {
     const file = `${dir}/${addZero(i + 1)}_${lesson.slug}.md`
-    const summary = `# Original Transcript\n\n${lesson.transcript}\n`
+    const summary = `${lesson.transcript}\n`
 
     writeFileToDir(file, summary)
   })
