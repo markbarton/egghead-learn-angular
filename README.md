@@ -11,6 +11,8 @@
 
 ## Set up Auth
 1. Request a user token from an egghead team lead
+    * They will generate an access token from a user on the *production* database
+    * `User.find_by_email('example@user.com').access_tokens.create!`
 2. Copy the .env-template file
 3. Create a .env file
 4. Paste what you copied to the contents of the file
