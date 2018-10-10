@@ -5,6 +5,8 @@ const lodash = require('lodash')
 const fs = require('fs-extra')
 const {get, reduce, forEach} = lodash
 const addZero = require('add-zero')
+const imageUpload = require('./imageUpload')
+
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${process.env.EGGHEAD_AUTH_TOKEN}`;
 const http = axios.create()

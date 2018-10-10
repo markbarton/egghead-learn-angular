@@ -3,11 +3,19 @@
 1. Clone the repository to your working directory
 2. Run `yarn` to install dependencies
 3. Set up Auth
-4. Run `yarn start`
-5. Paste the course slug you are going to enhance, and hit enter
-6. Check the `output` directory
-7. ???
-8. Profit!
+4. Create a file `src/.env` with these contents:
+```
+AWS_BUCKET_NAME=name_here_without_quotes
+AWS_KEY_ID=key_here_without_quotes
+AWS_SECRET_KEY=key_here_without_quotes
+```
+5. Run `yarn start`
+6. Paste the course slug you are going to enhance, and hit enter
+7. Check the `output` directory
+8. ???
+9. Profit!
+
+AWS credentials can be created in [the management console](https://console.aws.amazon.com/console/home) for development.
 
 ## Set up Auth
 1. Request a user token from an egghead team lead

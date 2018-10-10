@@ -5,17 +5,27 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
+    "upload": "node src/upload.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "add-zero": "^1.0.0",
+    "aws-sdk": "^2.328.0",
     "axios": "^0.18.0",
     "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "express-fileupload": "^1.0.0-alpha.1",
     "fs-extra": "^6.0.1",
     "lodash": "^4.17.10",
+    "multer": "^1.4.0",
+    "multer-s3": "^2.7.0",
+    "node-s3-uploader": "^0.0.2",
     "prompt": "^1.0.0",
-    "prompt-input": "^3.0.0"
+    "prompt-input": "^3.0.0",
+    "s3": "^4.4.0",
+    "s3-stream-upload": "^2.0.2",
+    "s3-uploader": "^2.0.3"
   }
 }
