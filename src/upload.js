@@ -1,43 +1,48 @@
-const express = require('express');
-const imageUpload = require('./imageUpload')
-const s3 = require('s3')
-const multer = require('multer');
-// This is how to call imageUpload
-// imageUpload('../output/advanced-react-component-patterns/images/logo.png')
-//             .then(r => console.log('url: ', r))
+require('dotenv').config()
+var cloudinary = require('cloudinary')
+var _ = require('lodash')
+var fs = require('fs-extra')
 
-const app = express();
-
-app.use(express.static('public'));
-
-// Main, error and success views
-app.get('/', function (request, response) {
-  response.sendFile(__dirname + '/public/index.html');
+cloudinary.config({
+  cloud_name: `${process.env.CLOUD_NAME}`,
+  api_key: `${process.env.CLOUDINARY_API_KEY}`,
+  api_secret: `${process.env.CLOUDINARY_API_SECRET}`
 });
 
-var storage = multer.memoryStorage({
-  destination: function(req, file, callback) {
-      callback(null, '');
-  }
+var writeImageDataToFile = function (image) {
+  fs.readFile('output/imageData.json', function(err, data) {
+    if (err) throw err;
+
+    var data = JSON.parse(data);
+    data.push({
+      title: image.original_filename,
+      url: image.url
+    });
+    fs.writeFile('output/imageData.json', JSON.stringify(data, null, 4), function(err) {if (err) throw err});
+  });
+};
+
+var uploadImage = function(file) {
+  cloudinary.v2.uploader.upload(
+    file,
+    function(error, result) {
+      if (error) console.log(error)
+
+      console.log(`UPLOADED ${result.original_filename}`)
+      writeImageDataToFile(result);
+    }
+  )
+};
+
+fs.readdir('output', function(err, files) {
+  var transcriptFolder = _.find(files, function(file) { return !file.includes('.')})
+  var filePath = `output/${transcriptFolder}/images`
+
+  fs.readdir(filePath, function(err, files) {
+    fs.writeFile('output/imageData.json', '[]', function(err) {if (err) throw err});
+    files.forEach(function(file) {
+      uploadImage(`${filePath}/${file}`);
+    });
+  })
 });
 
-let uploads = multer({ storage: storage }).array('upload')
-app.post('/', uploads, function (request, response, next) {
- imageUpload(request.files)
-  .then(r => r.map((url) => {
-    console.log(url)
-  }))
-  response.redirect("/success")
-});
-
-app.get("/success", function (request, response) {
-  response.sendFile(__dirname + '/public/success.html');
-});
-
-app.get("/error", function (request, response) {
-  response.sendFile(__dirname + '/public/error.html');
-});
-
-app.listen(3001, function () {
-  console.log('Server listening on port 3001.');
-});
